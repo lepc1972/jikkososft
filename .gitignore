@@ -1,0 +1,47 @@
+# Archivos de estado de Terraform
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Archivos de bloqueo y caché
+.terraform/
+.terraform.lock.hcl  # Opcional: incluir si no se versionan las dependencias
+.terraform/modules/
+
+# Archivos de variables sensibles
+*.tfvars
+*.tfvars.json
+*.auto.tfvars
+
+# Archivos de override local
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Planes de ejecución
+*.tfplan
+
+# Logs de errores
+crash.log
+crash.*.log
+
+# Archivos de entorno
+.env
+.env.local
+
+# Configuraciones de IDEs/Editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Terragrunt (si se usa)
+.terragrunt-cache/
+
+# Archivos temporales de CLI
+*.terraformrc
+terraform.rc
+
+# Módulos descargados (si se usan enfoques no estándar)
+terraform.d/
