@@ -1,5 +1,10 @@
 provider "aws" {
-  region = var.region
+region = var.region
+}
+
+# Get list of AZs
+data "aws_availability_zones" "available" {
+state = "available"
 }
 
 # VPC
@@ -10,25 +15,24 @@ resource "aws_vpc" "main" {
 }
 
 # Subnets
-resource "aws_subnet_public" "public" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block = var.aws_subnet_public[0]
-    availability_zone = "us-east-2a"
-    map_public_ip_on_launch = true
-    tags = {
-      Name = "Public"
-    }
-
-
+resource "aws_subnet" "public" {
+count                   = length(var.aws_subnet_public)
+vpc_id                  = aws_vpc.main.id
+cidr_block              = var.aws_subnet_public[count.index]
+availability_zone       = data.aws_availability_zones.available.names[count.index]
+map_public_ip_on_launch = true
+tags = {
+    Name = "Public-${count.index + 1}"
+}
 }
 
-resource "aws_subnet_private" "private" {
- vpc_id            = aws_vpc.main.id
- cidr_block        = var.aws_subnet_private[0]
-  availability_zone = "us-east-2a"
-    tags = {
-        Name = "Private"
-    }
+resource "aws_subnet" "private" {
+vpc_id            = aws_vpc.main.id
+cidr_block        = var.aws_subnet_private[0]
+availability_zone = "us-east-2a"
+tags = {
+    Name = "Private"
+}
 }
 # Internet Gateway
 resource "aws_internet_gateway" "main" {
