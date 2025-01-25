@@ -54,10 +54,10 @@ jobs:
       - name: Run Tests
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
-          PYTHONPATH: ./my-app  # Añade esta línea
+          #PYTHONPATH: ./my-app  # Añade esta línea
         run: |
           pip install pytest
-          pytest my-app/tests --disable-warnings
+          pytest docker/my-app/tests --disable-warnings
 
       # Construir Docker
       - name: Build Docker Image
