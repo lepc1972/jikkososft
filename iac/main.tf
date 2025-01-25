@@ -1,32 +1,35 @@
 provider "aws" {
-  region = "us-east-2"
+  region = var.region
 }
 
 # VPC
 resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.aws_vpc
   enable_dns_support   = true
   enable_dns_hostnames = true
 }
 
 # Subnets
-resource "aws_subnet" "public" {
-  count                   = 2
+resource "aws_subnet_public" "public" {
   vpc_id                  = aws_vpc.main.id
-cidr_block              = count.index == 0 ? "10.0.1.0/24" : "10.0.2.0/24"
-  map_public_ip_on_launch = true
-  availability_zone       = element(data.aws_availability_zones.available.names, count.index)
+  cidr_block = var.aws_subnet_public[0]
+    availability_zone = "us-east-2a"
+    map_public_ip_on_launch = true
+    tags = {
+      Name = "Public"
+    }
+
+
 }
 
-resource "aws_subnet" "private" {
-  count             = 2
-  vpc_id            = aws_vpc.main.id
-cidr_block        = count.index == 0 ? "10.0.3.0/24" : "10.0.4.0/24"
-  availability_zone = element(data.aws_availability_zones.available.names, count.index)
+resource "aws_subnet_private" "private" {
+ vpc_id            = aws_vpc.main.id
+ cidr_block        = var.aws_subnet_private[0]
+  availability_zone = "us-east-2a"
+    tags = {
+        Name = "Private"
+    }
 }
-
-data "aws_availability_zones" "available" {}
-
 # Internet Gateway
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
@@ -78,14 +81,14 @@ resource "aws_lb" "main" {
 
 resource "aws_lb_target_group" "main" {
   name     = "my-target-group"
-  port     = 80
+  port     = var.port
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
 }
 
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.main.arn
-  port              = 80
+  port              = var.port
   protocol          = "HTTP"
 
   default_action {
@@ -97,15 +100,15 @@ resource "aws_lb_listener" "http" {
 # Launch Template
 resource "aws_launch_template" "main" {
   name          = "my-launch-template"
-  instance_type = "t2.micro"
-  image_id      = "ami-0d718c3d715cec4a7" # Reemplazar con la AMI deseada
+  instance_type = var.instance_type
+  image_id      = var.ami # Reemplazar con la AMI deseada
 }
 
 # Auto Scaling Group
 resource "aws_autoscaling_group" "main" {
-  desired_capacity = 2
-  max_size         = 5
-  min_size         = 1
+  desired_capacity = var.desired_capacity
+  max_size         = var.max_size
+  min_size         = var.min_size
   launch_template {
     id      = aws_launch_template.main.id
     version = "$Latest"
@@ -115,7 +118,7 @@ resource "aws_autoscaling_group" "main" {
 
 # Route 53 Record
 resource "aws_route53_record" "main" {
-  zone_id = "Z0759245S5D736AYFZ0X" # Reemplazar con el ID de la zona de Route 53
+  zone_id = var.zone_id # Reemplazar con el ID de la zona de Route 53
   name    = "app.example.com"
   type    = "A"
 
