@@ -56,7 +56,7 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
         run: |
           pip install pytest
-          pytest docker/my-app/app --disable-warnings
+          pytest my-app/tests --disable-warnings
 
       # Construir Docker
       - name: Build Docker Image
