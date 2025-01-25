@@ -121,6 +121,35 @@ terraform apply
 *   Un registro A para el balanceador de carga.
 
 
+# Docker
+
+1. ## Se crea una estructura docker para construir una app
+
+# My App with Docker
+
+Este repositorio contiene una aplicación Dockerizada con soporte para pruebas automatizadas. La estructura del proyecto está diseñada para facilitar el desarrollo, pruebas y despliegue.
+
+Requisitos
+
+Antes de comenzar, asegúrate de tener instalados los siguientes componentes:
+
+    Docker
+    Docker Compose
+    Python 3.x (opcional para desarrollo local)
+
+
+```
+└── 📁docker
+    └── 📁my-app
+        └── 📁app
+            └── app.py
+            └── requirements.txt
+        └── docker-compose.yaml
+        └── Dockerfile
+        └── 📁tests
+            └── __init__.py
+            └── test_app.py
+```
 
 
 
