@@ -48,7 +48,7 @@ jobs:
       - name: Run Linter
         run: |
           pip install flake8
-          flake8 my-app/app --max-line-length=88
+          flake8 docker/my-app/app --max-line-length=88
 
       # Pruebas (pytest)
       - name: Run Tests
@@ -56,7 +56,7 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
         run: |
           pip install pytest
-          pytest my-app/app --disable-warnings
+          pytest docker/my-app/app --disable-warnings
 
       # Construir Docker
       - name: Build Docker Image
